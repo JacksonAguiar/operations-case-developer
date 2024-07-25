@@ -5,7 +5,12 @@ import {
     IsNumber,
   } from "class-validator";
   
-  export class CreateProductDTO {
+  export class ProductDTO {
+   
+    @IsString()
+    @IsOptional()
+    id!: string;
+   
     @IsString()
     @IsNotEmpty()
     name!: string;
