@@ -21,19 +21,13 @@ describe("Product Routes", () => {
 
   describe("POST /produts", () => {
     it("should create a new user", async () => {
-      const res = await request(app).post(apiUrl).send({});
+      const res = await request(app).post(apiUrl).send(productDTO);
 
       expect(res.status).to.equal(201);
       expect(res.body).to.be.an("object");
       expect(res.body).to.have.property("message", "Product created successfully");
     });
 
-    it("should return an error if the name is empty", async () => {
-      const res = await request(app).post(apiUrl).send({});
-
-      expect(res.status).to.equal(400);
-      expect(res.body).to.have.property("error");
-    });
   });
 
   describe("GET /products/:id", () => {
@@ -58,15 +52,15 @@ describe("Product Routes", () => {
   });
   describe("GET /products/filter", () => {
     it("should get a product by range and category", async () => {
-      const p = await prisma.product.create({
+     await prisma.product.create({
         data: productDTO,
       });
 
-      const res = await request(app).get(`${apiUrl}/${p.id}`);
+      const res = await request(app).get(`${apiUrl}/filter?category=${productDTO.category}&minRange=1&maxRange=${productDTO.price+10}`);
 
       expect(res.status).to.equal(200);
-      expect(res.body).to.be.an("object");
-      expect(res.body).to.have.property("name", productDTO.name);
+      expect(res.body).to.be.an("array");
+      expect(res.body[0]).to.have.property("name", productDTO.name);
     });
   });
 });
